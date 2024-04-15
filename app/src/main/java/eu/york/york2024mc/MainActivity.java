@@ -7,7 +7,16 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+
 import eu.york.york2024mc.databinding.ActivityMainBinding;
+import eu.york.york2024mc.json.JsonResponse;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +43,36 @@ public class MainActivity extends AppCompatActivity {
 
                 setResult(5000, intent);
                 finish();
+            }
+        });
+
+        binding.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+
+                StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                        "https://dog.ceo/api/breeds/image/random",
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                if (response != null) {
+                                    Log.d("LOGS", response);
+                                    JsonResponse jsonResponse = new Gson().fromJson(response, JsonResponse.class);
+                                    Log.d("LOGS", jsonResponse.toString());
+
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error != null) {
+                            Log.d("LOGS", error.getMessage());
+                        }
+                    }
+                });
+
+                queue.add(stringRequest);
             }
         });
     }

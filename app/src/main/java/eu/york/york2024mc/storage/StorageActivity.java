@@ -1,6 +1,7 @@
 package eu.york.york2024mc.storage;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -37,8 +38,14 @@ public class StorageActivity extends AppCompatActivity {
 
 
         MyDatabaseInstance databaseInstance = Room.databaseBuilder(this, MyDatabaseInstance.class, "myDatabase")
-                        .allowMainThreadQueries()
-                        .build();
+                .build();
+
+        AsyncTask task = new MyAsyncTask(new MyAsyncTask.Listener() {
+            @Override
+            public void onResults(String data) {
+            }
+        });
+        task.execute("Vassilis", "Markos");
 
         List<UserEntity> dataList = databaseInstance.getUser().retrieve();
     }
